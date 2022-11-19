@@ -3,7 +3,8 @@ const audioURL = "https://www.youtube.com/watch?v=Ze1C1kyETi8"
 const APIKey = "47cb2007e83a4516baf72d939b5a7cc4"
 const refreshInterval = 5000
 const XLSX = require("xlsx");
-const youtubedl = require('youtube-dl-exec');
+const fs = require('fs');
+const ytdl = require('ytdl-core');
 const path = require("path");
 // Setting up the AssemblyAI headers
 const assembly = axios.create({
@@ -11,9 +12,11 @@ const assembly = axios.create({
   headers: {
     authorization: APIKey,
     "content-type": "application/json",
-    
   },
 });
+
+ytdl('http://www.youtube.com/watch?v=aqz-KE-bpKQ')
+  .pipe(fs.createWriteStream('video.mp4'));
 
 const getTranscript = async () => {
   // Sends the audio file to AssemblyAI for transcription
