@@ -6,6 +6,8 @@ const XLSX = require("xlsx");
 const fs = require('fs');
 const ytdl = require('ytdl-core');
 const path = require("path");
+const ffmpeg = require('fluent-ffmpeg');
+const readline = require('readline');
 // Setting up the AssemblyAI headers
 const assembly = axios.create({
   baseURL: "https://api.assemblyai.com/v2",
@@ -15,8 +17,24 @@ const assembly = axios.create({
   },
 });
 
-ytdl('http://www.youtube.com/watch?v=aqz-KE-bpKQ')
-  .pipe(fs.createWriteStream('video.mp4'));
+
+let id = '7wNb0pHyGuI';
+
+let stream = ytdl(id, {
+  quality: 'highestaudio',
+});
+
+let start = Date.now();
+ffmpeg(stream)
+  .audioBitrate(128)
+  .save(`${__dirname}/${id}.mp3`)
+  .on('progress', p => {
+    readline.cursorTo(process.stdout, 0);
+    process.stdout.write(`${p.targetSize}kb downloaded`);
+  })
+  .on('end', () => {
+    console.log(`\ndone, thanks - ${(Date.now() - start) / 1000}s`);
+  });
 
 const getTranscript = async () => {
   // Sends the audio file to AssemblyAI for transcription
