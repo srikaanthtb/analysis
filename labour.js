@@ -1,6 +1,7 @@
 const axios = require("axios");
+require('dotenv').config()
 const audioURL = "https://www.youtube.com/watch?v=Ze1C1kyETi8"
-const APIKey = "47cb2007e83a4516baf72d939b5a7cc4"
+const APIKey = process.env.ASSEMBLY
 const refreshInterval = 5000
 const XLSX = require("xlsx");
 const fs = require('fs');
